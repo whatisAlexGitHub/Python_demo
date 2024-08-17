@@ -1,35 +1,21 @@
 from netmiko import ConnectHandler
 
 def interface_ip(connection):
-    # 手動修改方法
-    interface_name = ''  
-    ip_address = ''      #[ip] [subnet mask] 或dhcp或pool [num]
+    interface = input('interface:')  
+    ip_address = input('ip_address [ip] [subnet mask]:')
     
-    # 提問修改方法
-    change_interface = input(f"將會修改的interface為'{interface_name}'，是否修改？(y/n): ")
-    if change_interface.lower() == 'y':
-        interface_name = input("新的接口名稱: ")
-    
-    change_ip = input(f"將會修改其ip為'{ip_address}'，是否修改？(y/n): ")
-    if change_ip.lower() == 'y':
-        ip_address = input("新的IP([ip] [subnet mask] 或dhcp或pool [num]): ")
-
-    # 預防錯誤輸入
-    if len(interface_name) > 2 and len(ip_address) > 2:
-        config_commands = [
-            'conf t',
-            f'interface {interface_name}',
-            f'ip address {ip_address}',
-            'no shutdown',
-            'exit',
-        ]
-        output = connection.send_config_set(config_commands)
-        print(output)
-    else:
-        print("未進行任何配置。")
+    config_commands = [
+        'conf t',
+        f'interface {interface}',
+        f'ip address {ip_address}',
+        'no shutdown',
+        'exit',
+    ]
+    output = connection.send_config_set(config_commands)
+    print(output)
 
 def ROAS_router(connection):
-    ROAS_interface = input("設置ROAS的Interface: ")
+    ROAS_interface = input("ROAS_interface: ")
     vlan_number = input("VLAN number: ")
     first_usable_subnet_ip = input("[first_usable_subnet_IP] [subnet_mask]: ")
     
@@ -55,10 +41,10 @@ def save(connection):
 def main():
     # Cisco 設備參數
     cisco_device = {
-        'device_type': 'cisco_ios',
+        'device_type': '',
         'host': '',
-        'username': 'admin',
-        'password': 'admin',
+        'username': '',
+        'password': '',
         'port': 22,
     }
     connection = ConnectHandler(**cisco_device)
